@@ -28,7 +28,7 @@ const createInputCVA = (error?: string) => {
     'border-neutral-divider',
     'focus:outline-none',
     'w-full',
-    { 'border-red-500 text-red-500 placeholder:text-red-500': error },
+    { 'border-red-500 text-danger-500 placeholder:text-danger-500': error },
   )
 }
 
@@ -101,7 +101,7 @@ const Field = forwardRef<InputRefCallback, InputProps>(
       return (
         <div className="flex flex-col gap-2 w-full">
           {returnInput()}
-          <div className="text-red-500 text-sm">{error}</div>
+          <div className="text-danger-500 text-sm">{error}</div>
         </div>
       )
     else return returnInput()

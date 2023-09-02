@@ -12,6 +12,7 @@ export default {
         'neutral-grey': '#404555',
         'neutral-divider': '#DCDEE5',
         'neutral-charcoal': '#606880',
+        'danger-500': '#D92D20',
       },
       fontFamily: {
         Poppins: ['Poppins', 'sans-serif'],
