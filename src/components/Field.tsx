@@ -5,11 +5,11 @@ import { twMerge } from 'tailwind-merge'
 // Define your variant configuration here
 const inputVariants = {
   intent: {
-    primary: ['border', 'rounded-sm', 'focus:border-blue-600'],
+    primary: ['border', 'rounded-sm', 'focus:border-neutral-grey'],
     secondary: [
       'bg-transparent',
       'border-b-2',
-      'focus:border-blue-600',
+      'focus:border-neutral-grey',
       'px-[.5em] py-[.2em]',
     ],
   },
