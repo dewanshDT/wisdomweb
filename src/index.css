@@ -1,17 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('react-phone-input-2/lib/style.css');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   font-family: 'Poppins', sans-serif;
-
-  color-scheme: light dark;
-  /* color: rgba(255, 255, 255, 0.87);
-  background-color: #242424; */
-
-  color: #213547;
-  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -29,12 +23,11 @@
 }
 
 a {
-  font-weight: 500;
-  color: #a9871e;
+  color: #2558e5;
   text-decoration: inherit;
 }
 a:hover {
-  color: #f1c12b;
+  color: #3f6be6;
 }
 
 body {
@@ -43,9 +36,32 @@ body {
   overflow: hidden;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
+.react-tel-input {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-family: 'Poppins';
+  display: flex;
+  gap: 1rem;
+  flex-direction: row-reverse;
+}
+
+.react-tel-input .flag-dropdown {
+  position: static;
+  border: 1px solid #dcdee5;
+  background-color: transparent;
+  border-radius: 3px;
+  padding: 0.5rem;
+}
+
+.react-tel-input .form-control {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: 100%;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  height: auto;
+  border: 1px solid #dcdee5;
+  border-radius: 3px;
 }
