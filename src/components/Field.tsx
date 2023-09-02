@@ -23,7 +23,6 @@ const inputVariants = {
 // Create a function that generates the class variance authority
 const createInputCVA = () => {
   return clsx(
-    'relative',
     'bg-white',
     'placeholder:text-neutral-charcoal',
     'border-neutral-divider',
