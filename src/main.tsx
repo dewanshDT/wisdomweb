@@ -1,13 +1,13 @@
-import * as React from "react"
-import * as ReactDOM from "react-dom/client"
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
-import "./index.css"
-import { RootLayout } from "./components"
-import { ErrorPage, HomePage, LoginPage, SignupPage } from "./pages"
+import * as React from 'react'
+import * as ReactDOM from 'react-dom/client'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
+import './index.css'
+import { AuthLayout, RootLayout } from './components'
+import { ErrorPage, HomePage, LoginPage, SignupPage } from './pages'
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <RootLayout />,
     errorElement: <ErrorPage />,
     children: [
@@ -18,17 +18,18 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/auth",
+    path: '/auth',
+    element: <AuthLayout />,
     children: [
       { index: true, element: <Navigate replace to="/auth/login" /> },
-      { path: "signup", element: <SignupPage /> },
-      { path: "login", element: <LoginPage /> },
+      { path: 'signup', element: <SignupPage /> },
+      { path: 'login', element: <LoginPage /> },
     ],
   },
 ])
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </React.StrictMode>,
 )

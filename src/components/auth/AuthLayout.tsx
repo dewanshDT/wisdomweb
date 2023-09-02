@@ -1,0 +1,35 @@
+import { Outlet } from 'react-router-dom'
+import logo from '../../assets/vectors/Logo.svg'
+import figurine from '../../assets/POSE.png'
+import { DividerIcon } from '../../icons'
+
+const AuthLayout = () => {
+  return (
+    <div className="w-full h-full flex">
+      <div className="h-full py-6 py-4 text-white flex flex-col items-center w-full max-w-xl bg-neutral-grey">
+        <img src={logo} className="my-auto" />
+        <div className="flex w-full">
+          <img src={figurine} />
+          <div className="flex gap-6 flex-col w-full">
+            <div className="flex flex-col gap-3">
+              <div className="font-bold text-3xl">Welcome back!</div>
+              <p className="leading-6 text-base">
+                Sign In to find opportunities that match your interests. We have
+                both part-time and full-time roles that can be done online and
+                in-person.
+              </p>
+            </div>
+            <DividerIcon className="text-2xl" />
+            <p className="text-sm">
+              Please contact us at <b>+91-9380644532</b> if you need any
+              assistance.
+            </p>
+          </div>
+        </div>
+      </div>
+      <Outlet />
+    </div>
+  )
+}
+
+export default AuthLayout
