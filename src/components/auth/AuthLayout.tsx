@@ -1,12 +1,12 @@
 import { Outlet } from 'react-router-dom'
 import logo from '../../assets/vectors/Logo.svg'
 import figurine from '../../assets/POSE.png'
-import { DividerIcon } from '../../icons'
+import { DividerIcon, WisdomCircleTextLogo } from '../../icons'
 
 const AuthLayout = () => {
   return (
-    <div className="w-full h-full flex">
-      <div className="h-full py-6 py-4 text-white flex flex-col items-center w-full max-w-xl bg-neutral-grey">
+    <div className="w-full h-full flex flex-col lg:flex-row">
+      <div className="h-full hidden px-4 py-6 text-white lg:flex flex-col items-center w-full max-w-xl bg-neutral-grey">
         <img src={logo} className="my-auto" />
         <div className="flex w-full">
           <img src={figurine} />
@@ -26,6 +26,9 @@ const AuthLayout = () => {
             </p>
           </div>
         </div>
+      </div>
+      <div className="flex lg:hidden justify-center items-center h-[20%]">
+        <WisdomCircleTextLogo />
       </div>
       <Outlet />
     </div>

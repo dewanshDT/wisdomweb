@@ -2,6 +2,7 @@ import PhoneInput from 'react-phone-input-2'
 import { Button, Field } from '../components'
 import { useState } from 'react'
 import { Helmet } from 'react-helmet'
+import { Link } from 'react-router-dom'
 
 const SignupPage = () => {
   const [value, setValue] = useState('')
@@ -11,20 +12,20 @@ const SignupPage = () => {
         <title>Sign Up: Wisdom Circle</title>
         <meta name="description" content="Wisdom Circle sign up page" />
       </Helmet>
-      <div className="flex flex-col justify-center items-center h-full w-full">
-        <div className="w-full max-w-sm gap-4 flex flex-col">
+      <div className="flex flex-col justify-center p-6 items-center h-full w-full">
+        <div className="w-full lg:h-auto h-full lg:max-w-sm sm:max-w-lg gap-4 flex flex-col">
           <div className="gap-4">
             <h3 className="font-bold text-2xl w-full text-neutral-black">
               Create an account
             </h3>
             <p className="text-neutral-grey">
               Already have an account?{' '}
-              <a href="/auth/login" className="font-semibold">
+              <Link to="/auth/login" className="font-semibold">
                 Sign In
-              </a>
+              </Link>
             </p>
           </div>
-          <form className="flex gap-4 w-full flex-col">
+          <form className="flex gap-4 h-full w-full flex-col">
             <div className="gap-4 flex flex-col w-full">
               <Field placeholder="First Name" required />
               <Field placeholder="Last Name" required />
@@ -50,10 +51,12 @@ const SignupPage = () => {
             </div>
             <p className="text-neutral-grey text-xs my-2">
               By clicking Sign Up you are indicating that you have read and
-              acknowledged the <a href="/terms">Terms of Service</a> and{' '}
-              <a href="/privacy">Privacy Notice</a>
+              acknowledged the <Link to="/terms">Terms of Service</Link> and{' '}
+              <Link to="/privacy">Privacy Notice</Link>
             </p>
-            <Button>Sign Up</Button>
+            <div className="w-full mt-auto">
+              <Button className="w-full">Sign Up</Button>
+            </div>
           </form>
         </div>
       </div>
