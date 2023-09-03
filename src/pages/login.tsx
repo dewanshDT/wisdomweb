@@ -13,10 +13,10 @@ const LoginPage = () => {
         <div className="w-full lg:h-auto h-full lg:max-w-sm sm:max-w-lg gap-4 flex flex-col">
           <div className="gap-4">
             <h3 className="font-bold text-2xl w-full text-neutral-black">
-              Create an account
+              Sign In to WisdomCircle
             </h3>
             <p className="text-neutral-grey">
-              Already have an account?{' '}
+              Don't have an account?{' '}
               <Link to="/auth/signup" className="font-semibold">
                 Sign In
               </Link>
