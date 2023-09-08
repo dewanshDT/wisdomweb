@@ -11,13 +11,23 @@ export enum REST_METHODS {
   DELETE = 'DELETE',
 }
 
+export interface ApiResponse {
+  statusCode: number
+  success: true
+  message: string | undefined
+  data: unknown
+}
+
 const checkRefresh = async (token: Token) => {
   const jwtUser = jwt_decode<{ name: string; exp: number }>(token.value)
   const isExpired = dayjs.unix(jwtUser.exp).diff(dayjs()) < 1
   if (isExpired) await token.refresh()
 }
 
-export const fetcher = async (url: string, token?: Token) => {
+export const fetcher = async (
+  url: string,
+  token?: Token,
+): Promise<ApiResponse | undefined> => {
   if (token) {
     checkRefresh(token)
   }
@@ -31,13 +41,22 @@ export const fetcher = async (url: string, token?: Token) => {
     const res = await fetch(url, {
       headers: customHeaders,
     })
+
     if (!res.ok) {
       throw new Error(res.statusText)
     }
-    const { data: resData } = await res.json()
-    return resData
+
+    const { data: resData, statusCode, message, success } = await res.json()
+
+    return {
+      statusCode: statusCode,
+      message: message,
+      success: success,
+      data: resData,
+    }
   } catch (e) {
     console.error(`this is from fetcher\n${e}`)
+    return undefined
   }
 }
 
@@ -46,7 +65,7 @@ export const sendJsonData = async (
   data: unknown,
   token?: Token,
   method: REST_METHODS = REST_METHODS.POST,
-) => {
+): Promise<ApiResponse | undefined> => {
   if (token) checkRefresh(token)
   try {
     const customHeaders = new Headers()
@@ -64,11 +83,22 @@ export const sendJsonData = async (
     })
 
     if (!response.ok) {
-      throw new Error(response.statusText)
+      throw new Error(await response.json())
     }
 
-    const { data: resData } = await response.json()
-    return resData
+    const {
+      data: resData,
+      statusCode,
+      message,
+      success,
+    } = await response.json()
+
+    return {
+      statusCode: statusCode,
+      message: message,
+      success: success,
+      data: resData,
+    }
   } catch (e) {
     console.error(`from sendJsonData\n${e}`)
   }

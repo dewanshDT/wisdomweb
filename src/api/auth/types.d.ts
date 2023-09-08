@@ -15,10 +15,15 @@ export interface Token {
 export interface Context {
   user: User | null
   token: Token | undefined
-  login: (email: string, password: string) => Promise<Response | undefined>
-  signup: (data: RegisterInputs) => Promise<Response | undefined>
+  login: (email: string, password: string) => Promise<AuthResponse>
+  signup: (data: RegisterInputs) => Promise<AuthResponse>
   sendVerificationEmail: () => Promise<void>
   logout: () => void
+}
+
+export interface AuthResponse {
+  success: boolean
+  message: string | undefined
 }
 
 export interface RegisterInputs {

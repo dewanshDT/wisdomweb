@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { AuthContext } from '.'
 import { BASE_API_URL, fetcher, sendJsonData } from '..'
-import { RegisterInputs, Token, User } from './types'
+import { AuthResponse, RegisterInputs, Token, User } from './types'
 
 interface AuthProps {
   children?: React.ReactNode
@@ -30,9 +30,9 @@ const AuthProvider: React.FC<AuthProps> = (props) => {
       fetcher(`${BASE_API_URL}/api/user/me`, {
         value: accessToken,
         refresh,
-      }).then((data) => {
-        console.log(data)
-        setUser(data)
+      }).then((res) => {
+        console.log(res)
+        if (res?.success) setUser(res.data as User)
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,17 +40,22 @@ const AuthProvider: React.FC<AuthProps> = (props) => {
 
   const refresh = async () => {
     const refreshToken = localStorage.getItem('refreshToken')
-    const response = await sendJsonData(`${BASE_API_URL}/api/token/refresh`, {
-      token: refreshToken,
-    })
-    const { accessToken }: { accessToken: string } = response
+    const response = await sendJsonData(
+      `${BASE_API_URL}/api/auth/token/refresh`,
+      {
+        token: refreshToken,
+      },
+    )
+    const { accessToken }: { accessToken: string } = response?.data as {
+      accessToken: string
+    }
     if (accessToken) {
       localStorage.setItem('accessToken', accessToken)
       setToken({ refresh, value: accessToken })
     }
   }
 
-  const signup = async (data: RegisterInputs) => {
+  const signup = async (data: RegisterInputs): Promise<AuthResponse> => {
     const customHeaders = new Headers()
     customHeaders.append('Content-Type', 'application/json')
 
@@ -59,32 +64,42 @@ const AuthProvider: React.FC<AuthProps> = (props) => {
       data,
     )
 
-    const {
-      accessToken,
-      refreshToken,
-      user,
-    }: { accessToken: string; refreshToken: string; user: User } = response
+    if (response?.success) {
+      const {
+        accessToken,
+        refreshToken,
+        user,
+      }: { accessToken: string; refreshToken: string; user: User } =
+        response.data as {
+          accessToken: string
+          refreshToken: string
+          user: User
+        }
 
-    console.log(accessToken, refreshToken)
+      console.log(accessToken, refreshToken)
 
-    if (accessToken) {
-      localStorage.setItem('accessToken', accessToken)
-      setToken({ refresh, value: accessToken })
-    }
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken)
+        setToken({ refresh, value: accessToken })
+      }
 
-    if (refreshToken) localStorage.setItem('refreshToken', refreshToken)
+      if (refreshToken) localStorage.setItem('refreshToken', refreshToken)
 
-    if (user) {
-      localStorage.setItem('user', user.id)
-      setUser(user)
-    }
+      if (user) {
+        localStorage.setItem('user', user.id)
+        setUser(user)
+      }
 
-    console.log(response)
+      console.log(response)
 
-    return response
+      return { success: true, message: 'signed up!' }
+    } else return { success: false, message: response?.message ?? 'failed' }
   }
 
-  const login = async (email: string, password: string) => {
+  const login = async (
+    email: string,
+    password: string,
+  ): Promise<AuthResponse> => {
     const customHeaders = new Headers()
     customHeaders.append('Content-Type', 'application/json')
 
@@ -93,27 +108,35 @@ const AuthProvider: React.FC<AuthProps> = (props) => {
       password,
     })
 
-    const {
-      accessToken,
-      refreshToken,
-      user,
-    }: { accessToken: string; refreshToken: string; user: User } = response
+    if (response?.success) {
+      const {
+        accessToken,
+        refreshToken,
+        user,
+      }: { accessToken: string; refreshToken: string; user: User } =
+        response.data as {
+          accessToken: string
+          refreshToken: string
+          user: User
+        }
 
-    console.log(accessToken, refreshToken)
+      console.log(accessToken, refreshToken)
 
-    if (accessToken) {
-      localStorage.setItem('accessToken', accessToken)
-      setToken({ refresh, value: accessToken })
-    }
+      if (accessToken) {
+        localStorage.setItem('accessToken', accessToken)
+        setToken({ refresh, value: accessToken })
+      }
 
-    if (refreshToken) localStorage.setItem('refreshToken', refreshToken)
+      if (refreshToken) localStorage.setItem('refreshToken', refreshToken)
 
-    if (user) {
-      localStorage.setItem('user', user.id)
-      setUser(user)
-    }
+      if (user) {
+        localStorage.setItem('user', user.id)
+        setUser(user)
+      }
+      console.log(response)
 
-    return response
+      return { success: true, message: 'logged in!' }
+    } else return { success: false, message: response?.message }
   }
 
   const sendVerificationEmail = async () => {

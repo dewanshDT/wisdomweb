@@ -3,6 +3,7 @@ import { Button, Field } from '../components'
 import { Link } from 'react-router-dom'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useAuth } from '../api/auth'
+import { useState } from 'react'
 
 interface Inputs {
   email: string
@@ -10,6 +11,8 @@ interface Inputs {
 }
 
 const LoginPage = () => {
+  const [loginError, setLoginError] = useState<string | undefined>('')
+
   const { login } = useAuth()
   const {
     handleSubmit,
@@ -17,10 +20,15 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<Inputs>()
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setLoginError('')
     console.log(data)
-    login(data.email, data.password)
+    const res = await login(data.email, data.password)
+
+    if (!res.success)
+      setLoginError(res?.message ?? 'email or password incorrect!')
   }
+
   return (
     <>
       <Helmet>
@@ -44,6 +52,9 @@ const LoginPage = () => {
             onSubmit={handleSubmit(onSubmit)}
             className="flex gap-4 h-full w-full flex-col"
           >
+            {loginError && (
+              <div className="text-danger-500 text-sm">{loginError}</div>
+            )}
             <div className="gap-4 flex flex-col w-full">
               <Field
                 {...register('email', { required: true })}
