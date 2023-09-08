@@ -1,11 +1,33 @@
 import PhoneInput from 'react-phone-input-2'
 import { Button, Field } from '../components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import clsx from 'clsx'
+import { RegisterInputs } from '../api/auth/types'
+import { useAuth } from '../api/auth'
 
 const SignupPage = () => {
-  const [value, setValue] = useState('')
+  const [phoneValue, setPhoneValue] = useState('')
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+    setValue,
+  } = useForm<RegisterInputs>()
+
+  const { signup } = useAuth()
+
+  const onSubmit: SubmitHandler<RegisterInputs> = (data) => {
+    console.log(data)
+    signup(data)
+  }
+
+  useEffect(() => {
+    console.log(errors)
+  }, [errors])
+
   return (
     <>
       <Helmet>
@@ -25,24 +47,61 @@ const SignupPage = () => {
               </Link>
             </p>
           </div>
-          <form className="flex gap-4 h-full w-full flex-col">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex gap-4 h-full w-full flex-col"
+          >
             <div className="gap-4 flex flex-col w-full">
-              <Field placeholder="First Name" required />
-              <Field placeholder="Last Name" required />
-              <Field placeholder="Email Address" required type="email" />
-              <PhoneInput
-                country="in"
-                value={value}
-                onChange={(value) => {
-                  setValue(value as string)
-                }}
+              <Field
+                {...register('firstName', { required: true })}
+                placeholder="First Name"
+                error={errors.firstName}
               />
+              <Field
+                {...register('lastName', { required: true })}
+                placeholder="Last Name"
+                error={errors.lastName}
+              />
+              <Field
+                {...register('email', {
+                  required: true,
+                  pattern: /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/,
+                })}
+                placeholder="Email Address"
+                type="email"
+                error={errors.email}
+              />
+              <div
+                className={clsx(
+                  { error: errors.mobileNumber },
+                  'flex flex-col gap-2',
+                )}
+              >
+                <PhoneInput
+                  {...register('mobileNumber', { required: true })}
+                  country="in"
+                  value={phoneValue}
+                  onChange={(value) => {
+                    setPhoneValue(value)
+                    setValue('mobileNumber', value)
+                  }}
+                />
+                {errors.mobileNumber && (
+                  <div className="text-danger-500 text-sm">
+                    this is required
+                  </div>
+                )}
+              </div>
               <div className="flex flex-col gap-2 w-full">
                 <Field
-                  required
+                  {...register('password', {
+                    required: true,
+                    pattern: /^(?=.*[A-Za-z\d]).{8,}$/,
+                  })}
                   placeholder="Password"
                   autoComplete="new-password"
                   type="password"
+                  error={errors.password}
                 />
                 <div className="text-xs text-neutral-grey">
                   Password must be at least 8 characters
@@ -55,7 +114,9 @@ const SignupPage = () => {
               <Link to="/privacy">Privacy Notice</Link>
             </p>
             <div className="w-full mt-auto">
-              <Button className="w-full">Sign Up</Button>
+              <Button className="w-full" type="submit">
+                Sign Up
+              </Button>
             </div>
           </form>
         </div>

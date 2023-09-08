@@ -1,6 +1,7 @@
 import { forwardRef, HTMLProps, ForwardedRef, useState } from 'react'
 import clsx from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { FieldError } from 'react-hook-form'
 
 // variant configuration here
 const inputVariants = {
@@ -21,7 +22,7 @@ const inputVariants = {
 }
 
 // function that generates the class variance authority
-const createInputCVA = (error?: string) => {
+const createInputCVA = (error?: string | FieldError | undefined) => {
   return clsx(
     'bg-white',
     'placeholder:text-neutral-charcoal',
@@ -40,7 +41,14 @@ interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'className'> {
   className?: string
   intent?: keyof typeof inputVariants.intent
   inputSize?: keyof typeof inputVariants.inputSize
-  error?: string
+  error?: FieldError | string | undefined
+}
+
+function returnError(error: string | FieldError): string {
+  if (typeof error === 'string') return error
+  else if (error.type === 'pattern') return 'this value is not supported'
+  else if (error.type === 'required') return 'This field is required'
+  else return "something's wrong here"
 }
 
 const Field = forwardRef<InputRefCallback, InputProps>(
@@ -49,7 +57,7 @@ const Field = forwardRef<InputRefCallback, InputProps>(
       className,
       intent = 'primary',
       inputSize = 'base',
-      error,
+      error = undefined,
       type,
       ...props
     },
@@ -97,14 +105,14 @@ const Field = forwardRef<InputRefCallback, InputProps>(
       )
     }
 
-    if (error)
-      return (
-        <div className="flex flex-col gap-2 w-full">
-          {returnInput()}
-          <div className="text-danger-500 text-sm">{error}</div>
-        </div>
-      )
-    else return returnInput()
+    return (
+      <div className="flex flex-col gap-2 w-full">
+        {returnInput()}
+        {error && (
+          <div className="text-danger-500 text-sm">{returnError(error)}</div>
+        )}
+      </div>
+    )
   },
 )
 

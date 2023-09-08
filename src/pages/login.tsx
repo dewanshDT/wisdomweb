@@ -1,8 +1,26 @@
 import { Helmet } from 'react-helmet'
 import { Button, Field } from '../components'
 import { Link } from 'react-router-dom'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { useAuth } from '../api/auth'
+
+interface Inputs {
+  email: string
+  password: string
+}
 
 const LoginPage = () => {
+  const { login } = useAuth()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm<Inputs>()
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data)
+    login(data.email, data.password)
+  }
   return (
     <>
       <Helmet>
@@ -22,16 +40,25 @@ const LoginPage = () => {
               </Link>
             </p>
           </div>
-          <form className="flex gap-4 h-full w-full flex-col">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex gap-4 h-full w-full flex-col"
+          >
             <div className="gap-4 flex flex-col w-full">
-              <Field placeholder="Email Address" required type="email" />
+              <Field
+                {...register('email', { required: true })}
+                placeholder="Email Address"
+                type="email"
+                error={errors.email && 'this field is required'}
+              />
 
               <div className="flex flex-col gap-2 w-full">
                 <Field
-                  required
+                  {...register('password', { required: true })}
                   placeholder="Password"
                   autoComplete="current-password"
                   type="password"
+                  error={errors.password && 'this field is required'}
                 />
                 <Link to="/forgot" className="font-semibold ml-auto">
                   Forgot Password
@@ -39,7 +66,9 @@ const LoginPage = () => {
               </div>
             </div>
             <div className="w-full mt-auto">
-              <Button className="w-full">Sign In</Button>
+              <Button type="submit" className="w-full">
+                Sign In
+              </Button>
             </div>
           </form>
         </div>

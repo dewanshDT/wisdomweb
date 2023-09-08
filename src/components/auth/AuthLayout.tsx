@@ -1,9 +1,17 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import logo from '../../assets/vectors/Logo.svg'
 import figurine from '../../assets/POSE.png'
 import { DividerIcon, WisdomCircleTextLogo } from '../../icons'
+import { useAuth } from '../../api/auth'
+import { useEffect } from 'react'
 
 const AuthLayout = () => {
+  const { user } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (user) navigate('/')
+  }, [user, navigate])
   return (
     <div className="w-full h-full flex flex-col lg:flex-row">
       <div className="h-full hidden px-4 py-6 text-white lg:flex flex-col items-center w-full max-w-xl bg-neutral-grey">

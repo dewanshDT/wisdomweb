@@ -1,33 +1,50 @@
-import { useState } from 'react'
-import reactLogo from '../assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useAuth } from '../api/auth'
+import { Link } from 'react-router-dom'
+import { Button } from '../components'
 
 const HomePage = () => {
-  const [count, setCount] = useState(0)
+  const { user, logout, sendVerificationEmail } = useAuth()
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="flex items-center mx-6 h-screen justify-center">
+      <div className="flex flex-col gap-4">
+        {user ? (
+          <>
+            <h2 className="text-xl">👋 Hello {user.firstName}</h2>
+            {!user.isEmailVerified && (
+              <>
+                <div className="flex flex-col gap-2">
+                  <h2 className="text-xl">Please verify your email</h2>
+                  <p className="text-sm text-gray-700">
+                    please check your registered email for verification link
+                  </p>
+                </div>
+                <Button
+                  intent="secondary"
+                  className="mt-4"
+                  onClick={() => sendVerificationEmail()}
+                >
+                  Send verification link
+                </Button>
+              </>
+            )}
+            <Button onClick={() => logout()}>Log Out</Button>
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl">to continue</h2>
+            <Link to="/auth/login">
+              <Button className="w-full">Log In</Button>
+            </Link>
+            <Link to="/auth/signup">
+              <Button className="w-full" intent="secondary">
+                Sign Up
+              </Button>
+            </Link>
+          </>
+        )}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 
